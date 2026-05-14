@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from .models import StudentErpLogin, FacultyErpLogin
+from courses.models import Announcement, Event, FeeRecord
+from courses.services import predict_sgpa, student_attendance_overview, weak_student_rows
 
 
 @require_http_methods(["GET", "POST"])
@@ -37,6 +39,7 @@ def staff_login(request):
                     user.save()
                 
                 login(request, user)
+                request.session['campus_role'] = 'faculty'
                 return redirect('staff_dashboard')
             else:
                 messages.error(request, '❌ Invalid credentials')
@@ -72,6 +75,7 @@ def student_login(request):
                     }
                 )
                 login(request, user)
+                request.session['campus_role'] = 'student'
                 return redirect('student_dashboard')
             else:
                 messages.error(request, '❌ Invalid credentials')
@@ -93,8 +97,22 @@ def staff_dashboard(request):
         messages.error(request, 'Faculty record not found')
         return redirect('staff_login')
     
+    sections = faculty.sections.select_related('course', 'course__semester', 'course__program').prefetch_related(
+        'enrollments__student',
+        'enrollments__attendance_records',
+        'enrollments__grade_records',
+        'assignments',
+        'materials',
+    )
+    weak_students = []
+    for section in sections:
+        weak_students.extend(weak_student_rows(section))
+
     context = {
         'faculty': faculty,
+        'sections': sections,
+        'announcements': Announcement.objects.filter(audience__in=['all', 'teachers'], is_active=True)[:5],
+        'weak_students': weak_students[:8],
         'page_title': f'Faculty Dashboard - {faculty.username}',
     }
     
@@ -113,8 +131,38 @@ def student_dashboard(request):
         messages.error(request, 'Student record not found')
         return redirect('student_login')
     
+    enrollments = student.enrollments.select_related(
+        'section',
+        'section__course',
+        'section__course__semester',
+        'section__teacher',
+    ).prefetch_related(
+        'attendance_records',
+        'grade_records',
+        'section__assignments',
+        'section__materials',
+        'section__timetable_slots',
+    ).filter(status='enrolled')
+    sections = [enrollment.section for enrollment in enrollments]
+    assignments = []
+    materials = []
+    timetable_slots = []
+    for section in sections:
+        assignments.extend(section.assignments.all())
+        materials.extend(section.materials.all())
+        timetable_slots.extend(section.timetable_slots.all())
+
     context = {
         'student': student,
+        'enrollments': enrollments,
+        'attendance_rows': student_attendance_overview(enrollments),
+        'prediction': predict_sgpa(enrollments),
+        'assignments': sorted(assignments, key=lambda item: item.due_at or item.created_at)[:8],
+        'materials': sorted(materials, key=lambda item: item.created_at, reverse=True)[:8],
+        'timetable_slots': sorted(timetable_slots, key=lambda item: (item.day_of_week, item.start_time))[:10],
+        'fee_records': FeeRecord.objects.filter(student=student)[:8],
+        'announcements': Announcement.objects.filter(audience__in=['all', 'students'], is_active=True)[:5],
+        'events': Event.objects.all()[:5],
         'page_title': f'Student Dashboard - {student.username}',
     }
     

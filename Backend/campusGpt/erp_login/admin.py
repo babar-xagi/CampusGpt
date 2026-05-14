@@ -276,20 +276,28 @@ class FacultyErpLoginAdmin(admin.ModelAdmin):
         return request.user.is_superuser
 
     def has_change_permission(self, request, obj=None):
-        """Only superusers can edit"""
-        return request.user.is_superuser
+        """Superusers edit all; faculty can edit only their own credentials"""
+        if request.user.is_superuser:
+            return True
+        if obj is None:
+            return request.user.is_staff
+        return request.user.is_staff and obj.username == request.user.username
 
     def has_view_permission(self, request, obj=None):
-        """Only superusers (admin) can view"""
-        return request.user.is_superuser
+        """Superusers view all; faculty can view only their own credentials"""
+        if request.user.is_superuser:
+            return True
+        if obj is None:
+            return request.user.is_staff
+        return request.user.is_staff and obj.username == request.user.username
 
     def get_queryset(self, request):
         """
-        Only superusers can see faculty records.
+        Superusers see all faculty records; faculty see only their own record.
         """
         qs = super().get_queryset(request)
         if not request.user.is_superuser:
-            return qs.none()
+            return qs.filter(username=request.user.username)
         return qs
 
     def save_model(self, request, obj, form, change):
