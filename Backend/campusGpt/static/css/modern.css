@@ -1,0 +1,222 @@
+/* 
+   CampusGPT Premium Modern Stylesheet 
+   Contains core design variables, glassmorphism utility classes, transitions, animations, and typography enhancements.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+:root {
+    /* Color Palette - Vibrant Indigo & Blue Accent */
+    --primary: 99, 102, 241;       /* #6366f1 (Indigo) */
+    --primary-light: 129, 140, 248; /* #818cf8 */
+    --primary-dark: 79, 70, 229;    /* #4f46e5 */
+    --secondary: 14, 165, 233;     /* #0ea5e9 (Sky Blue) */
+    
+    /* Backgrounds & Text (Light Mode Default) */
+    --bg-base: 248, 250, 252;       /* Slate 50 */
+    --bg-surface: 255, 255, 255;
+    --border-color: 226, 232, 240;  /* Slate 200 */
+    --text-main: 15, 23, 42;        /* Slate 900 */
+    --text-muted: 100, 116, 139;    /* Slate 500 */
+    
+    /* Glassmorphism Specs (Light Mode) */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+}
+
+.dark {
+    /* Backgrounds & Text (Dark Mode) */
+    --bg-base: 15, 23, 42;          /* Slate 900 */
+    --bg-surface: 30, 41, 59;       /* Slate 800 */
+    --border-color: 51, 65, 85;     /* Slate 700 */
+    --text-main: 248, 250, 252;     /* Slate 50 */
+    --text-muted: 148, 163, 184;    /* Slate 400 */
+    
+    /* Glassmorphism Specs (Dark Mode) */
+    --glass-bg: rgba(15, 23, 42, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Global Styles Override */
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: rgb(var(--bg-base));
+    color: rgb(var(--text-main));
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(var(--primary), 0.2);
+    border-radius: 9999px;
+    transition: background 0.3s;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--primary), 0.5);
+}
+
+/* --- Premium Layout & Visual Utilities --- */
+
+/* Modern Premium Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 1.25rem;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.08);
+    border-color: rgba(var(--primary), 0.2);
+}
+
+.dark .glass-card:hover {
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Glassmorphic Input Fields */
+.glass-input {
+    background: rgba(var(--bg-surface), 0.4);
+    border: 1px solid rgb(var(--border-color));
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: rgb(var(--text-main));
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-input:focus {
+    border-color: rgba(var(--primary), 0.8);
+    background: rgba(var(--bg-surface), 0.7);
+    box-shadow: 0 0 0 4px rgba(var(--primary), 0.15);
+}
+
+/* Premium Gradient Button */
+.btn-premium {
+    background: linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--secondary)) 100%);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(var(--primary), 0.3);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-premium:hover {
+    box-shadow: 0 6px 20px rgba(var(--primary), 0.45);
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+
+.btn-premium:active {
+    transform: translateY(1px);
+}
+
+/* Accent Gradients & Glows */
+.text-gradient {
+    background: linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--secondary)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.glow-bg {
+    position: absolute;
+    width: 25rem;
+    height: 25rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(var(--primary), 0.08) 0%, transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* --- Micro-Animations --- */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Chat bubble entries animation */
+@keyframes slideInMsg {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.message-bubble {
+    animation: slideInMsg 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pulse Glow Animation */
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(var(--primary), 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(var(--primary), 0.4);
+    }
+}
+
+.pulse-glow {
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Dashboard Sidebar Styling */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    color: rgb(var(--text-muted));
+    transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+    color: rgb(var(--text-main));
+    background: rgba(var(--primary), 0.06);
+}
+
+.sidebar-link.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--secondary)) 100%);
+    box-shadow: 0 4px 12px rgba(var(--primary), 0.25);
+}

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from .models import StudentErpLogin, FacultyErpLogin
-from courses.models import Announcement, Event, FeeRecord
+from courses.models import Announcement, Event, FeeRecord, Notification
 from courses.services import predict_sgpa, student_attendance_overview, weak_student_rows
 
 
@@ -113,6 +113,7 @@ def staff_dashboard(request):
         'sections': sections,
         'announcements': Announcement.objects.filter(audience__in=['all', 'teachers'], is_active=True)[:5],
         'weak_students': weak_students[:8],
+        'notifications': Notification.objects.filter(user_username=faculty.username)[:10],
         'page_title': f'Faculty Dashboard - {faculty.username}',
     }
     
@@ -163,6 +164,7 @@ def student_dashboard(request):
         'fee_records': FeeRecord.objects.filter(student=student)[:8],
         'announcements': Announcement.objects.filter(audience__in=['all', 'students'], is_active=True)[:5],
         'events': Event.objects.all()[:5],
+        'notifications': Notification.objects.filter(user_username=student.username)[:10],
         'page_title': f'Student Dashboard - {student.username}',
     }
     

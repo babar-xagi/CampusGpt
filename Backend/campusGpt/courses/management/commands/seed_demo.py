@@ -32,6 +32,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write("Seeding CampusGPT demo data...")
 
+        from django.contrib.auth.models import User
+        if not User.objects.filter(username="admin", is_superuser=True).exists():
+            User.objects.create_superuser(
+                username="admin",
+                email="admin@superior.edu.pk",
+                password="AdminPass123!"
+            )
+            self.stdout.write("Superuser 'admin' created.")
+
+
         student, _ = StudentErpLogin.objects.get_or_create(
             username="su92-bsdsm-001",
             defaults={"email": "su92-bsdsm-001@superior.edu.pk"},
@@ -167,6 +177,7 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(self.style.SUCCESS("Demo data ready."))
+        self.stdout.write("Admin Superuser: admin / AdminPass123!")
         self.stdout.write("Student: su92-bsdsm-001 / StudentPass123!")
         self.stdout.write("Faculty: ahmed / FacultyPass123!")
         self.stdout.write("Operational staff: lib_aslam / StaffPass123!")

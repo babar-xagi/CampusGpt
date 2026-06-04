@@ -22,7 +22,9 @@ from .models import (
     StaffAttendance,
     StaffDuty,
     TimetableSlot,
+    Notification,
 )
+
 
 
 class CampusStaffForm(forms.ModelForm):
@@ -194,3 +196,11 @@ class LeaveRequestAdmin(admin.ModelAdmin):
     list_display = ("staff", "start_date", "end_date", "status", "created_at")
     list_filter = ("status", "created_at", "staff__role")
     search_fields = ("staff__username", "reason")
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ("user_username", "title", "category", "is_read", "created_at")
+    list_filter = ("is_read", "category", "created_at")
+    search_fields = ("user_username", "title", "message")
+

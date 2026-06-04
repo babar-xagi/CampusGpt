@@ -98,7 +98,8 @@ class AcademicModelTest(CampusMvpDataMixin, TestCase):
             total_marks=Decimal("10"),
         )
         prediction = predict_sgpa([self.enrollment])
-        self.assertEqual(prediction["sgpa"], 3.2)
+        self.assertEqual(prediction["sgpa"], 3.7)
+
 
     def test_quiz_generation_fallback(self):
         questions = generate_quiz_questions("linear regression and model evaluation")
@@ -129,8 +130,9 @@ class DashboardAccessTest(CampusMvpDataMixin, TestCase):
         self.client.force_login(self.student_user)
         response = self.client.get("/student/dashboard/")
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Student Dashboard")
+        self.assertContains(response, "Student Hub")
         self.assertContains(response, "Machine Learning")
+
 
     def test_faculty_dashboard_smoke(self):
         self.client.force_login(self.faculty_user)

@@ -1,75 +1,281 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Operational Staff Dashboard - CampusGPT{% endblock %}
+{% block title %}Operational Staff Hub — CampusGPT{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-slate-50">
-    <nav class="bg-white border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-900">CampusGPT</h1>
-                <p class="text-sm text-slate-500">Operational Staff Dashboard</p>
+<div class="relative min-h-screen pb-12">
+    <!-- Background Glows -->
+    <div class="glow-bg top-[-5%] left-[-5%]" style="background: radial-gradient(circle, rgba(99, 102, 241, 0.04) 0%, transparent 60%);"></div>
+    <div class="glow-bg bottom-[5%] right-[-5%]" style="background: radial-gradient(circle, rgba(14, 165, 233, 0.04) 0%, transparent 60%);"></div>
+
+    <!-- ===== DASHBOARD NAVBAR ===== -->
+    <nav class="sticky top-0 z-50 bg-white/75 dark:bg-slate-950/75 border-b border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="{% url 'home' %}" class="flex items-center gap-2">
+                <span class="text-2xl font-black bg-gradient-to-r from-indigo-500 to-sky-400 bg-clip-text text-transparent">
+                    CampusGPT
+                </span>
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Operations Portal</span>
+            </a>
+
+            <div class="flex items-center gap-4">
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <div class="flex items-center gap-3 border-l border-slate-200 dark:border-slate-800 pl-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-sky-400 flex items-center justify-center text-white font-extrabold text-xs">
+                        {{ staff.username|slice:":2"|upper }}
+                    </div>
+                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300 hidden sm:inline">{{ staff.full_name }}</span>
+                    <a href="{% url 'logout' %}" class="text-xs font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg border border-red-500/10">
+                        Sign Out
+                    </a>
+                </div>
             </div>
-            <a href="{% url 'logout' %}" class="px-4 py-2 rounded-md bg-red-600 text-white text-sm">Logout</a>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <section class="lg:col-span-2 space-y-6">
-            <div class="bg-white border border-slate-200 rounded-lg p-6">
-                <h2 class="text-lg font-semibold mb-4">{{ staff.full_name }}</h2>
-                <p class="text-sm text-slate-500">{{ staff.get_role_display }} / {{ staff.email }}</p>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="max-w-7xl mx-auto px-6 pt-8 space-y-8 relative z-10 animate-fade-in-up">
+        
+        <!-- Welcome banner -->
+        <section class="glass-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-1 text-gradient">
+                    Operational Staff Dashboard
+                </h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                    Welcome back, {{ staff.full_name }}. Check your duty roster, review your salaries, log attendance, and submit leave requests.
+                </p>
             </div>
-
-            <div class="bg-white border border-slate-200 rounded-lg p-6">
-                <h2 class="text-lg font-semibold mb-4">Assigned Duties</h2>
-                {% for duty in duties %}
-                <p class="text-sm border-b py-2">{{ duty.title }} - {{ duty.location }} / {{ duty.starts_at }}</p>
-                {% empty %}
-                <p class="text-sm text-slate-500">No duties assigned.</p>
-                {% endfor %}
-            </div>
-
-            <div class="bg-white border border-slate-200 rounded-lg p-6">
-                <h2 class="text-lg font-semibold mb-4">Attendance</h2>
-                {% for row in attendance %}
-                <p class="text-sm border-b py-2">{{ row.date }} - {{ row.status|title }}</p>
-                {% empty %}
-                <p class="text-sm text-slate-500">No attendance records.</p>
-                {% endfor %}
+            <div class="flex gap-3">
+                <span class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold border border-slate-200/50 dark:border-slate-700/50 flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400">
+                    ⚙️ Role: {{ staff.get_role_display }}
+                </span>
             </div>
         </section>
 
-        <aside class="space-y-6">
-            <div class="bg-white border border-slate-200 rounded-lg p-6">
-                <h2 class="text-lg font-semibold mb-4">Leave Request</h2>
-                <form method="post" class="space-y-3">
-                    {% csrf_token %}
-                    <input name="start_date" type="date" class="w-full border rounded p-2 text-sm" required>
-                    <input name="end_date" type="date" class="w-full border rounded p-2 text-sm" required>
-                    <textarea name="reason" rows="3" class="w-full border rounded p-2 text-sm" placeholder="Reason" required></textarea>
-                    <button class="w-full bg-slate-900 text-white rounded py-2 text-sm">Submit</button>
-                </form>
+        <!-- KPI Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Assigned Duties count -->
+            <div class="glass-card p-6 flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">Assigned Duties</span>
+                    <span class="text-3xl font-extrabold">{{ duties|length }}</span>
+                </div>
+                <div class="text-3xl p-3 rounded-xl bg-indigo-500/10 text-indigo-500">📅</div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-lg p-6">
-                <h2 class="text-lg font-semibold mb-4">Salary Records</h2>
-                {% for salary in salary_records %}
-                <p class="text-sm border-b py-2">{{ salary.month|date:"M Y" }} - Paid {{ salary.paid_amount }} / {{ salary.gross_amount }}</p>
-                {% empty %}
-                <p class="text-sm text-slate-500">No salary records.</p>
-                {% endfor %}
+            <!-- Attendance Days -->
+            <div class="glass-card p-6 flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">Log Count</span>
+                    <span class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">{{ attendance|length }}</span>
+                </div>
+                <div class="text-3xl p-3 rounded-xl bg-emerald-500/10 text-emerald-500">📈</div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-lg p-6">
-                <h2 class="text-lg font-semibold mb-4">Leave History</h2>
-                {% for leave in leave_requests %}
-                <p class="text-sm border-b py-2">{{ leave.start_date }} to {{ leave.end_date }} - {{ leave.status|title }}</p>
-                {% empty %}
-                <p class="text-sm text-slate-500">No leave requests.</p>
-                {% endfor %}
+            <!-- Email info -->
+            <div class="glass-card p-6 flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">Contact Email</span>
+                    <span class="text-sm font-bold text-slate-700 dark:text-slate-300 truncate block max-w-[15rem]">
+                        {{ staff.email }}
+                    </span>
+                </div>
+                <div class="text-3xl p-3 rounded-xl bg-sky-500/10 text-sky-500">✉️</div>
             </div>
-        </aside>
+        </section>
+
+        <!-- Dashboard Layout Split Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Panel: Duties & Attendance (Col Span 2) -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Assigned Duties -->
+                <div class="glass-card p-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <span>📋</span> Assigned Duty Roster
+                    </h3>
+                    <div class="space-y-4">
+                        {% for duty in duties %}
+                        <div class="p-4 rounded-xl border border-slate-200/50 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-900/10 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-800 dark:text-slate-100">{{ duty.title }}</h4>
+                                <p class="text-xs text-slate-500 mt-1">📍 Location: {{ duty.location|default:"Central Campus" }}</p>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="text-right">
+                                    <span class="text-[10px] text-slate-400 block font-bold uppercase">Starts At</span>
+                                    <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">{{ duty.starts_at|date:"d M H:i" }}</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase
+                                    {% if duty.is_completed %}
+                                        bg-emerald-500/10 text-emerald-600 border border-emerald-500/20
+                                    {% else %}
+                                        bg-amber-500/10 text-amber-600 border border-amber-500/20
+                                    {% endif %}"
+                                >
+                                    {% if duty.is_completed %}Completed{% else %}Scheduled{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-slate-500 text-xs py-4 text-center">No duties currently scheduled.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Staff Attendance -->
+                <div class="glass-card p-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <span>📈</span> Attendance History
+                    </h3>
+                    <div class="space-y-3">
+                        {% for row in attendance %}
+                        <div class="p-3 rounded-xl border border-slate-200/50 dark:border-slate-800/50 flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-700 dark:text-slate-300">{{ row.date|date:"d M Y" }}</span>
+                            <div class="flex items-center gap-4">
+                                <span class="text-slate-500">Check In: {{ row.check_in|default:"--:--" }} | Check Out: {{ row.check_out|default:"--:--" }}</span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
+                                    {% if row.status == 'present' %}
+                                        bg-emerald-500/10 text-emerald-600 border border-emerald-500/20
+                                    {% elif row.status == 'late' %}
+                                        bg-amber-500/10 text-amber-600 border border-amber-500/20
+                                    {% else %}
+                                        bg-red-500/10 text-red-600 border border-red-500/20
+                                    {% endif %}"
+                                >
+                                    {{ row.status }}
+                                </span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-slate-500 text-xs py-4 text-center">No attendance logs found.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Leave Management & Salaries -->
+            <div class="space-y-8">
+                <!-- Alert Notifications Panel -->
+                <div class="glass-card p-6 bg-gradient-to-br from-indigo-50/50 to-white/50 dark:from-slate-900/40 dark:to-slate-800/40">
+                    <h3 class="text-lg font-bold mb-4 flex items-center justify-between">
+                        <span class="flex items-center gap-2">
+                            <span>🔔</span> Alerts & Notifications
+                        </span>
+                        {% if notifications %}
+                        <span class="px-2 py-0.5 rounded-full bg-indigo-500 text-white text-[10px] font-black animate-pulse">
+                            NEW
+                        </span>
+                        {% endif %}
+                    </h3>
+                    <div class="space-y-3 max-h-[14rem] overflow-y-auto pr-1">
+                        {% for n in notifications %}
+                        <div class="p-3 rounded-xl border border-slate-200/50 dark:border-slate-800/50 bg-white/50 dark:bg-slate-900/30 text-xs flex gap-3">
+                            <span class="text-base">
+                                {% if n.category == 'attendance' %}🚨
+                                {% elif n.category == 'quiz' %}🧠
+                                {% elif n.category == 'material' %}📁
+                                {% else %}🔔{% endif %}
+                            </span>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-slate-800 dark:text-slate-200">{{ n.title }}</h4>
+                                <p class="text-slate-500 dark:text-slate-400 text-[10px] mt-1 leading-relaxed">{{ n.message }}</p>
+                                <span class="text-[8px] text-slate-400 font-bold block mt-1 uppercase">{{ n.created_at|date:"d M H:i" }}</span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-slate-500 text-xs py-4 text-center">No new notifications or alerts.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Submit Leave -->
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <span>📝</span> File Leave Request
+                    </h3>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Start Date</label>
+                            <input name="start_date" type="date" required class="w-full glass-input text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">End Date</label>
+                            <input name="end_date" type="date" required class="w-full glass-input text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Reason</label>
+                            <textarea name="reason" rows="3" required class="w-full glass-input text-xs" placeholder="Detail the reason for leave..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full btn-premium py-2.5 text-xs font-bold">
+                            Submit Leave Application
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Salary Records -->
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <span>💳</span> Salary Slip Log
+                    </h3>
+                    <div class="space-y-3">
+                        {% for salary in salary_records %}
+                        <div class="p-3 rounded-xl border border-slate-200/50 dark:border-slate-800/50 bg-slate-50/50 dark:bg-slate-900/30 text-xs flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-slate-800 dark:text-slate-100">{{ salary.month|date:"F Y" }}</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">Paid On: {{ salary.paid_on|date:"d M Y"|default:"TBD" }}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-mono font-bold text-slate-800 dark:text-slate-100">PKR {{ salary.paid_amount }}</span>
+                                <span class="text-[9px] text-slate-400 block">Gross: PKR {{ salary.gross_amount }}</span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-slate-500 text-xs py-4 text-center">No payroll logs available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Leave History Board -->
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <span>📅</span> Leave Request Board
+                    </h3>
+                    <div class="space-y-3">
+                        {% for leave in leave_requests %}
+                        <div class="p-3 rounded-xl border border-slate-200/50 dark:border-slate-800/50 text-xs">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-700 dark:text-slate-300">
+                                    {{ leave.start_date|date:"d M" }} - {{ leave.end_date|date:"d M Y" }}
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider
+                                    {% if leave.status == 'approved' %}
+                                        bg-emerald-500/10 text-emerald-600 border border-emerald-500/20
+                                    {% elif leave.status == 'rejected' %}
+                                        bg-red-500/10 text-red-600 border border-red-500/20
+                                    {% else %}
+                                        bg-amber-500/10 text-amber-600 border border-amber-500/20
+                                    {% endif %}"
+                                >
+                                    {{ leave.status }}
+                                </span>
+                            </div>
+                            <p class="text-slate-500 dark:text-slate-400 truncate mt-1">Reason: {{ leave.reason }}</p>
+                        </div>
+                        {% empty %}
+                        <p class="text-slate-500 text-xs py-4 text-center">No past leave applications.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
 {% endblock %}

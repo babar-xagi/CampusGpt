@@ -1,122 +1,383 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Faculty Dashboard - CampusGPT{% endblock %}
+{% block title %}Faculty Hub — CampusGPT{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-slate-50">
-    <nav class="bg-white border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-indigo-700">CampusGPT</h1>
-                <p class="text-sm text-slate-500">Faculty Dashboard</p>
-            </div>
+<div class="relative min-h-screen pb-12">
+    <!-- Background Glows -->
+    <div class="glow-bg top-[-5%] left-[-5%]" style="background: radial-gradient(circle, rgba(99, 102, 241, 0.04) 0%, transparent 60%);"></div>
+    <div class="glow-bg bottom-[5%] right-[-5%]" style="background: radial-gradient(circle, rgba(14, 165, 233, 0.04) 0%, transparent 60%);"></div>
+
+    <!-- ===== DASHBOARD NAVBAR ===== -->
+    <nav class="sticky top-0 z-50 bg-white/75 dark:bg-slate-950/75 border-b border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="{% url 'home' %}" class="flex items-center gap-2">
+                <span class="text-2xl font-black bg-gradient-to-r from-indigo-500 to-sky-400 bg-clip-text text-transparent">
+                    CampusGPT
+                </span>
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Faculty Portal</span>
+            </a>
+
             <div class="flex items-center gap-4">
-                <span class="text-sm text-slate-700">{{ faculty.username }}</span>
-                <a href="{% url 'logout' %}" class="px-4 py-2 rounded-md bg-red-600 text-white text-sm">Logout</a>
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <div class="flex items-center gap-3 border-l border-slate-200 dark:border-slate-800 pl-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-sky-400 flex items-center justify-center text-white font-extrabold text-xs">
+                        {{ faculty.username|slice:":2"|upper }}
+                    </div>
+                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300 hidden sm:inline">{{ faculty.username }}</span>
+                    <a href="{% url 'logout' %}" class="text-xs font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg border border-red-500/10">
+                        Sign Out
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-white border border-slate-200 rounded-lg p-5">
-                <p class="text-sm text-slate-500">Assigned Sections</p>
-                <p class="text-3xl font-bold">{{ sections|length }}</p>
-            </div>
-            <div class="bg-white border border-slate-200 rounded-lg p-5">
-                <p class="text-sm text-slate-500">Weak/Risk Students</p>
-                <p class="text-3xl font-bold text-red-700">{{ weak_students|length }}</p>
-            </div>
-            <div class="bg-white border border-slate-200 rounded-lg p-5">
-                <p class="text-sm text-slate-500">Account</p>
-                <p class="text-xl font-bold text-indigo-700">{% if faculty.is_active %}Active{% else %}Inactive{% endif %}</p>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="max-w-7xl mx-auto px-6 pt-8 space-y-8 relative z-10 animate-fade-in-up">
+        
+        <!-- Welcome banner -->
+        <section class="glass-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-1 text-gradient">
+                    Faculty Dashboard
+                </h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                    Welcome back, Professor {{ faculty.username }}. Manage your courses, log attendance, upload lecture materials, and use AI features.
+                </p>
             </div>
         </section>
 
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 space-y-6">
+        <!-- KPI Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Assigned sections -->
+            <div class="glass-card p-6 flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">Assigned Sections</span>
+                    <span class="text-3xl font-extrabold">{{ sections|length }}</span>
+                </div>
+                <div class="text-3xl p-3 rounded-xl bg-indigo-500/10 text-indigo-500">🎓</div>
+            </div>
+
+            <!-- Weak / At Risk Students -->
+            <div class="glass-card p-6 flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">Weak / At-Risk Students</span>
+                    <span class="text-3xl font-extrabold text-red-600 dark:text-red-400">{{ weak_students|length }}</span>
+                </div>
+                <div class="text-3xl p-3 rounded-xl bg-red-500/10 text-red-500">🚨</div>
+            </div>
+
+            <!-- Account status -->
+            <div class="glass-card p-6 flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">Faculty Account</span>
+                    <span class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+                        {% if faculty.is_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                </div>
+                <div class="text-3xl p-3 rounded-xl bg-emerald-500/10 text-emerald-500">🔒</div>
+            </div>
+        </section>
+
+        <!-- Main Content split columns -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Active Sections Panel (Col span 2) -->
+            <div class="lg:col-span-2 space-y-8">
                 {% for section in sections %}
-                <div class="bg-white border border-slate-200 rounded-lg p-6">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
+                <div class="glass-card p-6 relative">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/50 dark:border-slate-800/50 pb-4 mb-6">
                         <div>
-                            <h2 class="text-lg font-semibold">{{ section.course.code }} - {{ section.course.name }}</h2>
-                            <p class="text-sm text-slate-500">Section {{ section.section }} / {{ section.room|default:"Room TBD" }} / {{ section.enrolled_count }} students</p>
+                            <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-500 text-[10px] font-bold uppercase tracking-wider">
+                                Section {{ section.section }}
+                            </span>
+                            <h2 class="text-xl font-bold mt-1 text-slate-800 dark:text-slate-100">
+                                {{ section.course.code }} — {{ section.course.name }}
+                            </h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                📍 Room: {{ section.room|default:"Room TBD" }} | Capacity: {{ section.capacity }} | Enrolled: {{ section.enrolled_count }} students
+                            </p>
                         </div>
                     </div>
 
-                    <form method="post" action="{% url 'mark_attendance' section.id %}" class="mb-6">
+                    <!-- Attendance Marking form -->
+                    <form method="post" action="{% url 'mark_attendance' section.id %}" class="mb-8">
                         {% csrf_token %}
-                        <h3 class="font-semibold text-sm mb-3">Mark Today's Attendance</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <h3 class="font-bold text-sm text-slate-700 dark:text-slate-300 mb-4 flex items-center gap-1.5">
+                            <span>📋</span> Mark Today's Attendance
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {% for enrollment in section.enrollments.all %}
-                            <label class="flex items-center justify-between border border-slate-200 rounded-md px-3 py-2 text-sm">
-                                <span>{{ enrollment.student.username }}</span>
-                                <select name="attendance_{{ enrollment.id }}" class="border border-slate-300 rounded px-2 py-1">
-                                    <option value="present">Present</option>
-                                    <option value="late">Late</option>
-                                    <option value="absent">Absent</option>
-                                    <option value="excused">Excused</option>
-                                </select>
-                            </label>
+                            <div class="flex items-center justify-between border border-slate-200/50 dark:border-slate-800/50 rounded-xl p-3 bg-slate-50/30 dark:bg-slate-900/10">
+                                <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ enrollment.student.username }}</span>
+                                <div class="flex gap-1 text-[10px]">
+                                    <select name="attendance_{{ enrollment.id }}" class="glass-input py-1 px-2 text-xs">
+                                        <option value="present">Present</option>
+                                        <option value="late">Late</option>
+                                        <option value="absent">Absent</option>
+                                        <option value="excused">Excused</option>
+                                    </select>
+                                </div>
+                            </div>
                             {% empty %}
-                            <p class="text-sm text-slate-500">No students enrolled.</p>
+                            <p class="text-xs text-slate-500 italic col-span-2">No students currently enrolled in this section.</p>
                             {% endfor %}
                         </div>
-                        <button class="mt-3 px-4 py-2 bg-indigo-700 text-white rounded-md text-sm">Save Attendance</button>
+                        {% if section.enrollments.all %}
+                        <button type="submit" class="btn-premium py-2.5 px-6 text-xs font-bold mt-4">
+                            Save Attendance Record
+                        </button>
+                        {% endif %}
                     </form>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <form method="post" enctype="multipart/form-data" action="{% url 'upload_material' section.id %}" class="border border-slate-200 rounded-lg p-4 space-y-3">
+                    <!-- Lecture Upload and AI Quiz Generation -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-200/50 dark:border-slate-800/50">
+                        <!-- Upload Card -->
+                        <form method="post" enctype="multipart/form-data" action="{% url 'upload_material' section.id %}" class="space-y-4">
                             {% csrf_token %}
-                            <h3 class="font-semibold text-sm">Upload Material</h3>
-                            <input name="title" class="w-full border rounded p-2 text-sm" placeholder="Title">
-                            <input name="file" type="file" class="w-full text-sm">
-                            <input name="external_url" class="w-full border rounded p-2 text-sm" placeholder="Optional URL">
-                            <button class="w-full bg-slate-900 text-white rounded py-2 text-sm">Upload</button>
+                            <h4 class="font-bold text-sm text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                <span>📁</span> Upload Lecture Materials
+                            </h4>
+                            <div>
+                                <input name="title" required class="w-full glass-input text-xs" placeholder="Material Title (e.g. Week 1 Slides)">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <select name="material_type" class="glass-input text-xs">
+                                    <option value="slides">Slides</option>
+                                    <option value="notes">Notes</option>
+                                    <option value="pdf">PDF File</option>
+                                    <option value="link">External Link</option>
+                                </select>
+                                <input type="file" name="file" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-semibold file:bg-indigo-500/10 file:text-indigo-500 hover:file:bg-indigo-500/25">
+                            </div>
+                            <div>
+                                <input name="external_url" class="w-full glass-input text-xs" placeholder="Optional URL Link">
+                            </div>
+                            <button type="submit" class="w-full btn-premium py-2 text-xs">
+                                Upload Resource
+                            </button>
                         </form>
 
-                        <form method="post" action="{% url 'generate_quiz' section.id %}" class="border border-slate-200 rounded-lg p-4 space-y-3">
+                        <!-- AI Quiz Card -->
+                        <form method="post" action="{% url 'generate_quiz' section.id %}" class="space-y-4">
                             {% csrf_token %}
-                            <h3 class="font-semibold text-sm">AI Quiz Generator</h3>
-                            <textarea name="source_text" rows="4" class="w-full border rounded p-2 text-sm" placeholder="Paste lecture topic or notes"></textarea>
-                            <button class="w-full bg-emerald-700 text-white rounded py-2 text-sm">Generate Quiz</button>
+                            <h4 class="font-bold text-sm text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                <span>🧠</span> AI Quiz Generator
+                            </h4>
+                            <p class="text-[10px] text-slate-400 leading-relaxed">
+                                Enter a topic, concept, or paste lecture text to automatically compile a 5-question assessment.
+                            </p>
+                            <div>
+                                <textarea name="source_text" rows="3" required class="w-full glass-input text-xs" placeholder="Paste concept text or topics here..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow-lg shadow-emerald-500/25 transition">
+                                Generate Assessment Quiz
+                            </button>
                         </form>
                     </div>
                 </div>
                 {% empty %}
-                <div class="bg-white border border-slate-200 rounded-lg p-6 text-slate-500">No sections assigned yet.</div>
+                <div class="glass-card p-6 text-center text-slate-500">
+                    No course sections currently assigned to your account.
+                </div>
                 {% endfor %}
             </div>
 
-            <aside class="space-y-6">
-                <div class="bg-white border border-slate-200 rounded-lg p-6">
-                    <h2 class="text-lg font-semibold mb-4">AI Advisor</h2>
-                    <form method="post" action="{% url 'ai_advisor' %}" class="space-y-3">
-                        {% csrf_token %}
-                        <textarea name="question" rows="4" class="w-full border rounded p-3 text-sm" placeholder="Ask about analytics, attendance, quizzes, or students"></textarea>
-                        <button class="w-full bg-indigo-700 text-white rounded py-2 text-sm">Ask</button>
-                    </form>
+            <!-- Right Column Panels -->
+            <div class="space-y-8">
+                <!-- Alert Notifications Panel -->
+                <div class="glass-card p-6 bg-gradient-to-br from-indigo-50/50 to-white/50 dark:from-slate-900/40 dark:to-slate-800/40">
+                    <h3 class="text-lg font-bold mb-4 flex items-center justify-between">
+                        <span class="flex items-center gap-2">
+                            <span>🔔</span> Alerts & Notifications
+                        </span>
+                        {% if notifications %}
+                        <span class="px-2 py-0.5 rounded-full bg-indigo-500 text-white text-[10px] font-black animate-pulse">
+                            NEW
+                        </span>
+                        {% endif %}
+                    </h3>
+                    <div class="space-y-3 max-h-[14rem] overflow-y-auto pr-1">
+                        {% for n in notifications %}
+                        <div class="p-3 rounded-xl border border-slate-200/50 dark:border-slate-800/50 bg-white/50 dark:bg-slate-900/30 text-xs flex gap-3">
+                            <span class="text-base">
+                                {% if n.category == 'attendance' %}🚨
+                                {% elif n.category == 'quiz' %}🧠
+                                {% elif n.category == 'material' %}📁
+                                {% else %}🔔{% endif %}
+                            </span>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-slate-800 dark:text-slate-200">{{ n.title }}</h4>
+                                <p class="text-slate-500 dark:text-slate-400 text-[10px] mt-1 leading-relaxed">{{ n.message }}</p>
+                                <span class="text-[8px] text-slate-400 font-bold block mt-1 uppercase">{{ n.created_at|date:"d M H:i" }}</span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-slate-500 text-xs py-4 text-center">No new notifications or alerts.</p>
+                        {% endfor %}
+                    </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-lg p-6">
-                    <h2 class="text-lg font-semibold mb-4">Students Needing Support</h2>
-                    {% for row in weak_students %}
-                    <p class="text-sm border-b py-2">{{ row.student.username }} - {{ row.suggestion }}</p>
-                    {% empty %}
-                    <p class="text-sm text-slate-500">No current risk signals.</p>
-                    {% endfor %}
+                <!-- Asynchronous Faculty AI Chat -->
+                <div class="glass-card p-6 flex flex-col h-[28rem] relative bg-white/80 dark:bg-slate-900/80">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2 pb-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                        <span>🤖</span> Faculty AI Assistant
+                    </h3>
+                    
+                    <div id="advisor-messages" class="flex-grow space-y-4 overflow-y-auto mb-4 text-xs pr-1">
+                        <div class="bg-indigo-50/80 dark:bg-indigo-950/30 text-indigo-950 dark:text-indigo-200 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start border border-indigo-100/50 dark:border-indigo-900/30 message-bubble">
+                            Hi Professor! I am your AI assistant. You can ask me for student grading analytics, course planning advice, or check quiz creation prompts!
+                        </div>
+                    </div>
+
+                    <div id="typing-indicator" class="hidden absolute bottom-16 left-6 bg-slate-100 dark:bg-slate-800 text-slate-500 p-2.5 rounded-xl rounded-tl-none text-[10px] font-semibold animate-pulse border border-slate-200/50 dark:border-slate-700/50">
+                        Assistant is thinking...
+                    </div>
+
+                    <div class="mt-auto pt-2 border-t border-slate-200/50 dark:border-slate-800/50">
+                        <form id="advisor-form" onsubmit="submitAdvisorQuery(event)" class="flex gap-2">
+                            {% csrf_token %}
+                            <input
+                                type="text"
+                                id="advisor-input"
+                                name="question"
+                                required
+                                autocomplete="off"
+                                class="glass-input flex-grow text-xs py-2 bg-slate-50/50 dark:bg-slate-950"
+                                placeholder="Ask assistant..."
+                            />
+                            <button type="submit" class="btn-premium px-4 text-xs font-bold py-2 whitespace-nowrap">
+                                Ask
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-lg p-6">
-                    <h2 class="text-lg font-semibold mb-4">Announcements</h2>
-                    {% for announcement in announcements %}
-                    <p class="text-sm border-b py-2"><strong>{{ announcement.title }}</strong><br>{{ announcement.body|truncatechars:80 }}</p>
-                    {% empty %}
-                    <p class="text-sm text-slate-500">No announcements.</p>
-                    {% endfor %}
+                <!-- Weak/Risk Students Alerts -->
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <span>🚨</span> Weak Students Warning
+                    </h3>
+                    <div class="space-y-3">
+                        {% for row in weak_students %}
+                        <div class="p-3 rounded-xl border border-red-500/10 bg-red-500/5 text-xs space-y-1">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-800 dark:text-slate-200">{{ row.student.username }}</span>
+                                <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-red-500/10 text-red-500 uppercase tracking-wide">
+                                    {{ row.attendance.risk }} risk
+                                </span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">
+                                Attendance: <span class="font-mono font-bold">{{ row.attendance.percentage }}%</span> | Avg Grade: <span class="font-mono font-bold">{{ row.average_grade|default:"No grades" }}%</span>
+                            </p>
+                            <p class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold italic mt-2">
+                                💡 {{ row.suggestion }}
+                            </p>
+                        </div>
+                        {% empty %}
+                        <p class="text-slate-500 text-xs py-4 text-center">No students flagged for academic risk.</p>
+                        {% endfor %}
+                    </div>
                 </div>
-            </aside>
-        </section>
+
+                <!-- System Announcements -->
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <span>📢</span> Announcements Feed
+                    </h3>
+                    <div class="space-y-4">
+                        {% for announcement in announcements %}
+                        <div class="border-l-2 border-indigo-500 pl-3 py-1">
+                            <h4 class="font-bold text-xs text-slate-800 dark:text-slate-100">{{ announcement.title }}</h4>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{{ announcement.body }}</p>
+                        </div>
+                        {% empty %}
+                        <p class="text-slate-500 text-xs py-4 text-center">No current announcements.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function submitAdvisorQuery(e) {
+        e.preventDefault();
+        const inputField = document.getElementById('advisor-input');
+        const questionText = inputField.value.trim();
+        if (!questionText) return;
+
+        inputField.value = '';
+
+        const messagesLog = document.getElementById('advisor-messages');
+        const userMsgHtml = `
+            <div class="bg-slate-200/60 dark:bg-slate-800/80 p-3 rounded-2xl rounded-tr-none max-w-[85%] ml-auto text-slate-800 dark:text-slate-200 message-bubble">
+                ${escapeHTML(questionText)}
+            </div>
+        `;
+        messagesLog.insertAdjacentHTML('beforeend', userMsgHtml);
+        scrollChatToBottom();
+
+        const typingIndicator = document.getElementById('typing-indicator');
+        typingIndicator.classList.remove('hidden');
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch("{% url 'ai_advisor' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ question: questionText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            typingIndicator.classList.add('hidden');
+            const advisorMsgHtml = `
+                <div class="bg-indigo-50/80 dark:bg-indigo-950/30 text-indigo-950 dark:text-indigo-200 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start border border-indigo-100/50 dark:border-indigo-900/30 message-bubble">
+                    ${escapeHTML(data.response || "I couldn't process your request.")}
+                </div>
+            `;
+            messagesLog.insertAdjacentHTML('beforeend', advisorMsgHtml);
+            scrollChatToBottom();
+        })
+        .catch(err => {
+            console.error('Advisor fetch error:', err);
+            typingIndicator.classList.add('hidden');
+            const errorHtml = `
+                <div class="bg-red-500/10 text-red-600 dark:text-red-400 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start border border-red-500/20 text-xs font-semibold message-bubble">
+                    Connection error. Please try again.
+                </div>
+            `;
+            messagesLog.insertAdjacentHTML('beforeend', errorHtml);
+            scrollChatToBottom();
+        });
+    }
+
+    function scrollChatToBottom() {
+        const messagesLog = document.getElementById('advisor-messages');
+        messagesLog.scrollTop = messagesLog.scrollHeight;
+    }
+
+    function escapeHTML(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+</script>
 {% endblock %}

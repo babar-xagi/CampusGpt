@@ -1,4 +1,4 @@
-
+{% load static %}
 <!doctype html>
 <html lang="en">
     <head>
@@ -10,75 +10,117 @@
 
         <!-- Tailwind CSS -->
         <script src="https://cdn.tailwindcss.com"></script>
-
-        <!-- Additional Styles -->
-        <style>
-            :root {
-                color-scheme: light dark;
-            }
-
-            @media (prefers-color-scheme: dark) {
-                body {
-                    background-color: #0f172a;
-                    color: #f1f5f9;
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            brand: {
+                                50: '#eef2ff',
+                                100: '#e0e7ff',
+                                200: '#c7d2fe',
+                                500: '#6366f1',
+                                600: '#4f46e5',
+                                700: '#4338ca',
+                            }
+                        }
+                    }
                 }
             }
-        </style>
+        </script>
+
+        <!-- Script to initialize theme -->
+        <script>
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        </script>
+
+        <!-- Custom Premium Stylesheet -->
+        <link rel="stylesheet" href="{% static 'css/modern.css' %}" />
 
         {% block extra_css %}{% endblock %}
     </head>
-    <body
-        class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 transition-colors"
-    >
+    <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-300 min-h-screen flex flex-col">
         <!-- Messages Display -->
         {% if messages %}
-        <div class="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+        <div class="fixed top-6 right-6 z-[9999] space-y-3 max-w-sm w-full">
             {% for message in messages %}
-            <div
-                class="p-4 rounded-lg shadow-lg {% if message.tags %}bg-{{ message.tags }}-50 dark:bg-{{ message.tags }}-900/30 text-{{ message.tags }}-800 dark:text-{{ message.tags }}-200 border border-{{ message.tags }}-200 dark:border-{{ message.tags }}-700{% else %}bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700{% endif %}"
+            <div id="toast-{{ forloop.counter }}" class="p-4 rounded-xl shadow-2xl border flex items-start gap-3 transition-all duration-300 transform translate-y-0 opacity-100 message-bubble
+                {% if 'error' in message.tags or 'danger' in message.tags %}
+                    bg-red-50/95 dark:bg-red-950/90 text-red-800 dark:text-red-200 border-red-200 dark:border-red-800
+                {% elif 'success' in message.tags %}
+                    bg-emerald-50/95 dark:bg-emerald-950/90 text-emerald-800 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800
+                {% elif 'warning' in message.tags %}
+                    bg-amber-50/95 dark:bg-amber-950/90 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-800
+                {% else %}
+                    bg-indigo-50/95 dark:bg-indigo-950/90 text-indigo-800 dark:text-indigo-200 border-indigo-200 dark:border-indigo-800
+                {% endif %}"
             >
-                {{ message }}
+                <div class="flex-grow text-sm font-medium">
+                    {{ message }}
+                </div>
+                <button onclick="dismissToast('toast-{{ forloop.counter }}')" class="text-current opacity-60 hover:opacity-100 transition-opacity">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
             {% endfor %}
         </div>
         {% endif %}
 
         <!-- Main Content -->
-        <main>{% block content %}{% endblock %}</main>
+        <main class="flex-grow flex flex-col">{% block content %}{% endblock %}</main>
 
         <!-- Footer -->
-        <footer
-            class="bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-8 mt-12"
-        >
-            <div
-                class="max-w-6xl mx-auto px-4 text-center text-slate-600 dark:text-slate-400"
-            >
-                <p>
-                    &copy; 2025 CampusGPT - Superior University's AI-Powered ERP
-                    System
-                </p>
-                <p class="text-sm mt-2">
-                    <a
-                        href="{% url 'home' %}"
-                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-                        >Home</a
-                    >
-                    •
-                    <a
-                        href="#"
-                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-                        >About</a
-                    >
-                    •
-                    <a
-                        href="#"
-                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-                        >Support</a
-                    >
+        <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-8 mt-auto">
+            <div class="max-w-7xl mx-auto px-6 text-center text-slate-500 dark:text-slate-400">
+                <p class="font-medium text-sm">&copy; 2026 CampusGPT — Superior University's AI-Powered ERP System</p>
+                <p class="text-xs mt-3 flex justify-center gap-4">
+                    <a href="{% url 'home' %}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Home</a>
+                    <span>•</span>
+                    <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">About</a>
+                    <span>•</span>
+                    <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Support</a>
                 </p>
             </div>
         </footer>
 
+        <!-- Scripts -->
+        <script>
+            function toggleTheme() {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                    document.dispatchEvent(new CustomEvent('theme-change', { detail: 'light' }));
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                    document.dispatchEvent(new CustomEvent('theme-change', { detail: 'dark' }));
+                }
+            }
+
+            function dismissToast(id) {
+                const toast = document.getElementById(id);
+                if (toast) {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }
+
+            // Auto dismiss toasts after 4 seconds
+            document.addEventListener('DOMContentLoaded', () => {
+                const toasts = document.querySelectorAll('[id^="toast-"]');
+                toasts.forEach(toast => {
+                    setTimeout(() => {
+                        dismissToast(toast.id);
+                    }, 4000);
+                });
+            });
+        </script>
         {% block extra_js %}{% endblock %}
     </body>
 </html>

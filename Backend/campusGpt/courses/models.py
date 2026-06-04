@@ -420,3 +420,19 @@ class LeaveRequest(models.Model):
 
     def __str__(self):
         return f"{self.staff.username} leave {self.start_date}"
+
+
+class Notification(models.Model):
+    user_username = models.CharField(max_length=150, db_index=True)
+    title = models.CharField(max_length=180)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    category = models.CharField(max_length=30, default="general")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.user_username} - {self.title} - {self.is_read}"
+

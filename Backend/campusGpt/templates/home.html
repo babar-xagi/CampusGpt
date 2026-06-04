@@ -1,466 +1,250 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusGPT - AI-Powered University ERP System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        indigo: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
-                        },
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-300">
+
+{% block title %}CampusGPT — AI-Powered University ERP{% endblock %}
 
 {% block content %}
+<div class="relative overflow-hidden min-h-screen">
+    <!-- Background Glows -->
+    <div class="glow-bg top-[-10%] left-[-10%]"></div>
+    <div class="glow-bg bottom-[10%] right-[-10%]" style="background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%);"></div>
 
-<!-- ===== 1. NAVBAR ===== -->
-<nav class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md bg-opacity-90 dark:bg-opacity-90">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <!-- Logo -->
-        <div class="flex-shrink-0">
-            <a href="#home" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
-                CampusGPT
+    <!-- ===== NAVBAR ===== -->
+    <nav class="sticky top-0 z-50 bg-white/75 dark:bg-slate-950/75 border-b border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="flex items-center gap-2">
+                <span class="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 to-sky-400 bg-clip-text text-transparent">
+                    CampusGPT
+                </span>
+                <span class="px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/50 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/50">
+                    MVP v1.1
+                </span>
             </a>
-        </div>
 
-        <!-- Center Menu -->
-        <div class="hidden md:flex items-center gap-8">
-            <a href="#home" class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-sm font-medium">Home</a>
-            <a href="#features" class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-sm font-medium">Features</a>
-            <a href="{% url 'admission_main' %}" class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-sm font-medium">Admissions</a>
-            <a href="#ai-assistant" class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-sm font-medium">AI Assistant</a>
-            <a href="#dashboard" class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-sm font-medium">Dashboard</a>
-            <a href="#contact" class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-sm font-medium">Contact</a>
-        </div>
-
-        <!-- Right Buttons -->
-        <div class="flex items-center gap-4">
-            <a href="{% url 'student_login' %}" class="hidden sm:inline-flex px-5 py-2 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors font-medium text-sm">
-                Login
-            </a>
-            <a href="{% url 'admission_main' %}" class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:shadow-lg hover:shadow-indigo-500/50 transition-all font-medium text-sm">
-                Apply Now
-            </a>
-        </div>
-    </div>
-</nav>
-
-<!-- ===== 2. HERO SECTION ===== -->
-<section id="home" class="py-16 md:py-24 px-6 max-w-7xl mx-auto">
-    <div class="text-center max-w-3xl mx-auto">
-        <!-- Main Headline -->
-        <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
-            Superior University's First AI-Powered ERP System
-        </h1>
-
-        <!-- Subheadline -->
-        <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 leading-relaxed">
-            Your timetable, GPA predictions, assignments, quizzes, and academic advisor — all in one intelligent platform.
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a href="{% url 'admission_main' %}" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:shadow-2xl hover:shadow-indigo-500/50 transition-all font-bold text-base text-center">
-                Apply Now
-            </a>
-            <a href="{% url 'student_login' %}" class="w-full sm:w-auto px-8 py-4 border-2 border-indigo-600 dark:border-indigo-500 text-indigo-600 dark:text-indigo-400 rounded-xl hover:bg-indigo-50 dark:hover:bg-slate-900 transition-all font-bold text-base text-center">
-                Student Login
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- ===== 3. FEATURES SECTION (GRID) ===== -->
-<section id="features" class="py-16 md:py-24 px-6 bg-slate-50 dark:bg-slate-900">
-    <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-5xl font-bold mb-4">Powerful Features Built for Students & Teachers</h2>
-            <p class="text-slate-600 dark:text-slate-400 text-lg">Everything you need to excel academically in one platform</p>
-        </div>
-
-        <!-- Feature Cards Grid -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Feature Card 1: AI Academic Advisor -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-all group">
-                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-xl mb-4 flex items-center justify-center text-white text-xl group-hover:scale-110 transition-transform">
-                    ✨
-                </div>
-                <h3 class="text-xl font-bold mb-3">AI Academic Advisor</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    Get personalized guidance on course selection, study strategies, and academic planning powered by AI.
-                </p>
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">Features</a>
+                <a href="#ai-demo" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">AI Advisor</a>
+                <a href="#portals" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">Portals</a>
             </div>
 
-            <!-- Feature Card 2: Smart Timetable + Alerts -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-all group">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl mb-4 flex items-center justify-center text-white text-xl group-hover:scale-110 transition-transform">
-                    📅
-                </div>
-                <h3 class="text-xl font-bold mb-3">Smart Timetable + Alerts</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    Never miss a class with intelligent timetable management and real-time notifications for schedule changes.
-                </p>
-            </div>
-
-            <!-- Feature Card 3: GPA & CGPA Prediction Engine -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-all group">
-                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl mb-4 flex items-center justify-center text-white text-xl group-hover:scale-110 transition-transform">
-                    📊
-                </div>
-                <h3 class="text-xl font-bold mb-3">GPA & CGPA Prediction</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    Predict your final GPA based on current performance and receive actionable insights to improve grades.
-                </p>
-            </div>
-
-            <!-- Feature Card 4: Assignment & Quiz Manager -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-all group">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl mb-4 flex items-center justify-center text-white text-xl group-hover:scale-110 transition-transform">
-                    ✅
-                </div>
-                <h3 class="text-xl font-bold mb-3">Assignment & Quiz Manager</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    Track assignments and quizzes with deadline reminders, progress tracking, and performance analytics.
-                </p>
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-4">
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+                
+                <a href="{% url 'student_login' %}" class="hidden sm:inline-flex text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                    Sign In
+                </a>
+                
+                <a href="#portals" class="btn-premium py-2 px-5 text-sm">
+                    Access ERP
+                </a>
             </div>
         </div>
-    </div>
-</section>
+    </nav>
 
-<!-- ===== 4. AI CHATBOT SECTION ===== -->
-<section id="ai-assistant" class="py-16 md:py-24 px-6 max-w-7xl mx-auto">
-    <div class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-12 border border-indigo-200 dark:border-slate-700">
-        <div class="max-w-2xl mx-auto text-center">
-            <div class="text-4xl mb-6">🤖</div>
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">Meet Your AI Academic Companion</h2>
-            <p class="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-                Ask anything related to your semester, outline, subjects, past papers, attendance, or policies. The system understands your academic context and provides intelligent, instantaneous responses to help you succeed.
+    <!-- ===== HERO SECTION ===== -->
+    <section class="max-w-7xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32 text-center relative z-10 animate-fade-in-up">
+        <div class="max-w-4xl mx-auto">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 mb-8">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300">Intelligent ERP System for Superior University</span>
+            </div>
+
+            <!-- Main Headline -->
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1]">
+                Empowering Campus Life with <span class="bg-gradient-to-r from-indigo-500 to-sky-400 bg-clip-text text-transparent">Agentic AI</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+                Experience the next generation of campus management. Track timetables, predict academic GPA grades, generate AI study content, and chat with your smart advisor.
             </p>
-            <a href="{% url 'login' %}" class="inline-block mt-8 px-8 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl hover:shadow-lg hover:shadow-indigo-500/50 transition-all font-bold">
-                Start Chatting Now
-            </a>
-        </div>
-    </div>
-</section>
 
-<!-- ===== 5. STUDENT DASHBOARD PREVIEW ===== -->
-<section id="dashboard" class="py-16 md:py-24 px-6 bg-slate-50 dark:bg-slate-900">
-    <div class="max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <h2 class="text-3xl md:text-4xl font-bold mb-6">Your Entire Academic Life — Organized</h2>
-                <p class="text-slate-600 dark:text-slate-400 mb-8 text-lg">
-                    A unified dashboard that brings together everything you need to manage your academic journey effectively.
-                </p>
-                <ul class="space-y-4">
-                    <li class="flex items-start gap-4">
-                        <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">✓</span>
-                        <span class="text-slate-700 dark:text-slate-300"><strong>Attendance Tracking:</strong> Real-time attendance monitoring with insights and alerts</span>
-                    </li>
-                    <li class="flex items-start gap-4">
-                        <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">✓</span>
-                        <span class="text-slate-700 dark:text-slate-300"><strong>Quiz/Assignment Reminders:</strong> Never miss deadlines with smart notifications</span>
-                    </li>
-                    <li class="flex items-start gap-4">
-                        <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">✓</span>
-                        <span class="text-slate-700 dark:text-slate-300"><strong>Course Outline Navigation:</strong> Quick access to all course materials and resources</span>
-                    </li>
-                    <li class="flex items-start gap-4">
-                        <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">✓</span>
-                        <span class="text-slate-700 dark:text-slate-300"><strong>Notifications System:</strong> Centralized alerts for all academic updates</span>
-                    </li>
-                    <li class="flex items-start gap-4">
-                        <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">✓</span>
-                        <span class="text-slate-700 dark:text-slate-300"><strong>GPA Performance Graph:</strong> Visual analytics of your academic progress</span>
-                    </li>
-                </ul>
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#portals" class="w-full sm:w-auto btn-premium py-4 px-8 text-base">
+                    Explore Role Portals
+                </a>
+                <a href="#ai-demo" class="w-full sm:w-auto px-8 py-4 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all font-bold text-base text-slate-700 dark:text-slate-300">
+                    Try AI Demo
+                </a>
             </div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-                <div class="space-y-4">
-                    <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded-full w-32"></div>
-                    <div class="space-y-3">
-                        <div class="h-12 bg-gradient-to-r from-indigo-100 to-blue-100 dark:from-slate-700 dark:to-slate-600 rounded-xl"></div>
-                        <div class="h-12 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-700 dark:to-slate-800 rounded-xl"></div>
-                        <div class="h-12 bg-gradient-to-r from-indigo-100 to-blue-100 dark:from-slate-700 dark:to-slate-600 rounded-xl"></div>
+        </div>
+    </section>
+
+    <!-- ===== PORTALS GRID SECTION ===== -->
+    <section id="portals" class="py-20 bg-slate-100/50 dark:bg-slate-900/30 border-y border-slate-200/50 dark:border-slate-800/50 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Choose Your Portal</h2>
+                <p class="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">Access customized modules tailormade for students, faculty, and operations staff.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Student Portal -->
+                <div class="glass-card p-8 flex flex-col justify-between h-[24rem]">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-2xl font-bold mb-6">
+                            🎓
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Student Portal</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                            View class schedules, log attendance, review quiz marks, access course slides, track fee dues, and forecast your SGPA.
+                        </p>
                     </div>
-                    <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
-                        <div class="h-32 bg-slate-100 dark:bg-slate-700 rounded-xl"></div>
+                    <a href="{% url 'student_login' %}" class="btn-premium text-center py-3 w-full">
+                        Student Sign In
+                    </a>
+                </div>
+
+                <!-- Faculty Portal -->
+                <div class="glass-card p-8 flex flex-col justify-between h-[24rem]">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-2xl font-bold mb-6">
+                            💼
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Faculty Portal</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                            Manage class sections, take digital attendance, upload study notes, generate automated AI quizzes, and identify weak students.
+                        </p>
+                    </div>
+                    <a href="{% url 'staff_login' %}" class="btn-premium text-center py-3 w-full">
+                        Faculty Sign In
+                    </a>
+                </div>
+
+                <!-- Operational Staff Portal -->
+                <div class="glass-card p-8 flex flex-col justify-between h-[24rem]">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-2xl font-bold mb-6">
+                            ⚙️
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Staff Portal</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                            For non-teaching staff (guards, librarians, assistants). Track duties, check attendance, review salary records, and file leave requests.
+                        </p>
+                    </div>
+                    <a href="{% url 'operations_staff_login' %}" class="btn-premium text-center py-3 w-full">
+                        Staff Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CORE FEATURES ===== -->
+    <section id="features" class="py-24 max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-20">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">Features Engineered for Success</h2>
+            <p class="text-slate-500 dark:text-slate-400">Everything you need to excel in your academic operations</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- feature 1 -->
+            <div class="glass-card p-6">
+                <span class="text-3xl mb-4 block">🤖</span>
+                <h4 class="font-bold text-lg mb-2">AI Academic Advisor</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                    Interactive RAG chatbot built to answer semester outlines, policies, timetables, and fee details.
+                </p>
+            </div>
+            <!-- feature 2 -->
+            <div class="glass-card p-6">
+                <span class="text-3xl mb-4 block">📈</span>
+                <h4 class="font-bold text-lg mb-2">GPA Forecasting</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                    Predict SGPA/CGPA dynamically based on current test grades and credits.
+                </p>
+            </div>
+            <!-- feature 3 -->
+            <div class="glass-card p-6">
+                <span class="text-3xl mb-4 block">📝</span>
+                <h4 class="font-bold text-lg mb-2">AI Quiz Generator</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                    Instantly extract quiz items and assignments from uploaded lecture PDFs or notes.
+                </p>
+            </div>
+            <!-- feature 4 -->
+            <div class="glass-card p-6">
+                <span class="text-3xl mb-4 block">🚨</span>
+                <h4 class="font-bold text-lg mb-2">Risk Alerts</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                    Detect and notify students whose attendance drops below required thresholds.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== INTERACTIVE AI DEMO SHOWCASE ===== -->
+    <section id="ai-demo" class="py-20 bg-slate-100/50 dark:bg-slate-900/30 border-t border-slate-200/50 dark:border-slate-800/50 relative z-10">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6">Interactive AI Advisor</h2>
+                    <p class="text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                        Say goodbye to complex nested menus. Simply chat with your AI advisor. Ask about class sections, due dates, course credits, or attendance criteria.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xs">✓</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Accesses real-time ERP records</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xs">✓</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Generates study notes summaries</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xs">✓</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Personalized grade predictions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulated Chat Widget -->
+                <div class="glass-card p-6 overflow-hidden flex flex-col h-[28rem] relative bg-white/80 dark:bg-slate-900/80">
+                    <!-- Chat Header -->
+                    <div class="flex items-center gap-3 border-b border-slate-200/60 dark:border-slate-700/60 pb-4 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-sky-400 flex items-center justify-center text-white text-lg font-bold">
+                            🤖
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800 dark:text-slate-100">CampusGPT Advisor</h4>
+                            <span class="text-xs text-emerald-500 flex items-center gap-1 font-medium">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Messages Log -->
+                    <div class="flex-grow space-y-4 overflow-y-auto mb-4 text-xs pr-1">
+                        <div class="bg-indigo-50/80 dark:bg-indigo-950/30 text-indigo-950 dark:text-indigo-200 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start border border-indigo-100/50 dark:border-indigo-900/30 message-bubble">
+                            Hi there! I'm your CampusGPT AI Academic Advisor. Ask me anything about your courses, grades, attendance risk, or fee dues!
+                        </div>
+                        <div class="bg-slate-200/60 dark:bg-slate-800/80 p-3 rounded-2xl rounded-tr-none max-w-[85%] ml-auto text-slate-800 dark:text-slate-200 message-bubble">
+                            How is my CGPA predicted?
+                        </div>
+                        <div class="bg-indigo-50/80 dark:bg-indigo-950/30 text-indigo-950 dark:text-indigo-200 p-3 rounded-2xl rounded-tl-none max-w-[85%] self-start border border-indigo-100/50 dark:border-indigo-900/30 message-bubble">
+                            I forecast your GPA by mapping your current grades (assignments, quiz scores) to credit-weighted grade points on a standard 4.0 scale. Try entering your marks in the portal!
+                        </div>
+                    </div>
+
+                    <!-- Input block mock -->
+                    <div class="mt-auto flex gap-2 pt-2 border-t border-slate-200/50 dark:border-slate-800/50">
+                        <input type="text" disabled placeholder="Sign in to chat with the advisor..." class="glass-input flex-grow text-xs py-2 bg-slate-100 dark:bg-slate-950">
+                        <button class="btn-premium px-4 text-xs font-bold py-2 whitespace-nowrap">
+                            Send
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- ===== 6. TEACHER PANEL SECTION ===== -->
-<section class="py-16 md:py-24 px-6 max-w-7xl mx-auto">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-            <div class="space-y-3">
-                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded-full w-40"></div>
-                <div class="space-y-2">
-                    <div class="h-3 bg-slate-100 dark:bg-slate-700 rounded-full"></div>
-                    <div class="h-3 bg-slate-100 dark:bg-slate-700 rounded-full w-48"></div>
-                </div>
-                <div class="pt-6 space-y-3">
-                    <div class="h-20 bg-gradient-to-r from-indigo-100 to-blue-100 dark:from-slate-700 dark:to-slate-600 rounded-xl"></div>
-                    <div class="h-20 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-700 dark:to-slate-800 rounded-xl"></div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">Empower Your Teaching</h2>
-            <p class="text-slate-600 dark:text-slate-400 mb-8 text-lg">
-                Transform your classroom with intelligent tools designed to enhance teaching effectiveness and student engagement.
-            </p>
-            <ul class="space-y-4">
-                <li class="flex items-start gap-4">
-                    <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">📁</span>
-                    <span class="text-slate-700 dark:text-slate-300"><strong>Upload Course Content:</strong> Organize and manage course materials, lecture notes, and resources easily</span>
-                </li>
-                <li class="flex items-start gap-4">
-                    <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">🧠</span>
-                    <span class="text-slate-700 dark:text-slate-300"><strong>Auto-generate Quizzes:</strong> AI-powered quiz creation from course content to save preparation time</span>
-                </li>
-                <li class="flex items-start gap-4">
-                    <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">📈</span>
-                    <span class="text-slate-700 dark:text-slate-300"><strong>Class Analytics Dashboard:</strong> Deep insights into student performance and learning patterns</span>
-                </li>
-                <li class="flex items-start gap-4">
-                    <span class="text-indigo-600 dark:text-indigo-400 text-2xl mt-0.5">📢</span>
-                    <span class="text-slate-700 dark:text-slate-300"><strong>Announcements Panel:</strong> Broadcast important updates and communicate with your class instantly</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- ===== 7. UNIVERSITY-WIDE FEATURES ===== -->
-<section class="py-16 md:py-24 px-6 bg-slate-50 dark:bg-slate-900">
-    <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Enterprise-Level Features for Your Institution</h2>
-            <p class="text-slate-600 dark:text-slate-400 text-lg">Seamlessly integrated solutions that scale across your entire university ecosystem</p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-                <div class="text-4xl mb-4">🎉</div>
-                <h3 class="text-xl font-bold mb-3">Events Notifications</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm">
-                    Stay updated on campus events, seminars, workshops, and activities with intelligent, personalized notifications.
-                </p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-                <div class="text-4xl mb-4">⚙️</div>
-                <h3 class="text-xl font-bold mb-3">Timetable Automation</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm">
-                    Intelligent scheduling that minimizes conflicts, optimizes classroom utilization, and adapts to changes in real-time.
-                </p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-                <div class="text-4xl mb-4">📋</div>
-                <h3 class="text-xl font-bold mb-3">Exam Schedules</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm">
-                    Automated exam scheduling with conflict detection, venue management, and invigilator allocation.
-                </p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-                <div class="text-4xl mb-4">📊</div>
-                <h3 class="text-xl font-bold mb-3">AI-Generated Reports</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm">
-                    Comprehensive institutional analytics and reports powered by AI to support data-driven decision-making.
-                </p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-                <div class="text-4xl mb-4">🔐</div>
-                <h3 class="text-xl font-bold mb-3">Secure Data Management</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm">
-                    Enterprise-grade security with role-based access control and comprehensive audit trails.
-                </p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-                <div class="text-4xl mb-4">🌐</div>
-                <h3 class="text-xl font-bold mb-3">API Integration</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm">
-                    Connect with existing university systems via robust APIs for seamless data synchronization.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== 8. TESTIMONIALS ===== -->
-<section class="py-16 md:py-24 px-6 max-w-7xl mx-auto">
-    <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our Community Says</h2>
-        <p class="text-slate-600 dark:text-slate-400 text-lg">Real experiences from students, teachers, and administrators</p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-8">
-        <!-- Testimonial 1: Student -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-            <div class="flex items-center gap-1 mb-4">
-                <span class="text-yellow-400">★★★★★</span>
-            </div>
-            <p class="text-slate-700 dark:text-slate-300 mb-6 italic">
-                "CampusGPT has transformed how I manage my academic workload. The AI advisor helped me plan my semester perfectly, and I've never missed a deadline since!"
-            </p>
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-blue-400 rounded-full flex items-center justify-center text-white font-bold">
-                    S
-                </div>
-                <div>
-                    <p class="font-bold text-slate-900 dark:text-slate-100">Sarah Ahmed</p>
-                    <p class="text-sm text-slate-600 dark:text-slate-400">3rd Year Student</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Testimonial 2: Teacher -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-            <div class="flex items-center gap-1 mb-4">
-                <span class="text-yellow-400">★★★★★</span>
-            </div>
-            <p class="text-slate-700 dark:text-slate-300 mb-6 italic">
-                "The auto-generated quizzes save me hours every week. The analytics dashboard gives me clear insights into which topics students struggle with."
-            </p>
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full flex items-center justify-center text-white font-bold">
-                    P
-                </div>
-                <div>
-                    <p class="font-bold text-slate-900 dark:text-slate-100">Dr. Priya Sharma</p>
-                    <p class="text-sm text-slate-600 dark:text-slate-400">Computer Science Professor</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Testimonial 3: Admin -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-            <div class="flex items-center gap-1 mb-4">
-                <span class="text-yellow-400">★★★★★</span>
-            </div>
-            <p class="text-slate-700 dark:text-slate-300 mb-6 italic">
-                "From a university administration perspective, CampusGPT's timetable automation and reporting features have reduced our workload significantly while improving accuracy."
-            </p>
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                    M
-                </div>
-                <div>
-                    <p class="font-bold text-slate-900 dark:text-slate-100">Mr. Malik Hassan</p>
-                    <p class="text-sm text-slate-600 dark:text-slate-400">Registrar & Administrator</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== 9. CALL TO ACTION ===== -->
-<section class="py-16 md:py-24 px-6 bg-gradient-to-br from-indigo-600 to-blue-600 text-white">
-    <div class="max-w-3xl mx-auto text-center">
-        <h2 class="text-3xl md:text-5xl font-bold mb-6">
-            Bring the Power of AI to Your Campus
-        </h2>
-        <p class="text-lg md:text-xl mb-10 text-indigo-100">
-            Join hundreds of universities transforming their academic experience with CampusGPT. Start your free trial today.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{% url 'login' %}" class="w-full sm:w-auto px-8 py-4 bg-white text-indigo-600 rounded-xl hover:shadow-2xl transition-all font-bold text-base hover:bg-indigo-50 text-center">
-                Request Demo
-            </a>
-            <a href="{% url 'login' %}" class="w-full sm:w-auto px-8 py-4 border-2 border-white text-white rounded-xl hover:bg-white/10 transition-all font-bold text-base text-center">
-                Contact Admin
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- ===== 10. FOOTER ===== -->
-<footer class="bg-slate-900 dark:bg-black text-slate-300 py-12 px-6">
-    <div class="max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-4 gap-8 mb-8">
-            <!-- Brand -->
-            <div>
-                <h3 class="text-white font-bold text-lg mb-4">CampusGPT</h3>
-                <p class="text-sm text-slate-400">Transforming university education with AI-powered intelligence.</p>
-            </div>
-
-            <!-- Product -->
-            <div>
-                <h4 class="text-white font-bold mb-4">Product</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Features</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Pricing</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Security</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Enterprise</a></li>
-                </ul>
-            </div>
-
-            <!-- Support -->
-            <div>
-                <h4 class="text-white font-bold mb-4">Support</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Documentation</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Help Center</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Community</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Contact Us</a></li>
-                </ul>
-            </div>
-
-            <!-- Social -->
-            <div>
-                <h4 class="text-white font-bold mb-4">Follow Us</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Twitter/X</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">LinkedIn</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">Facebook</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white transition">GitHub</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Footer Bottom -->
-        <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-sm text-slate-400">
-            <p>&copy; 2025 CampusGPT. All rights reserved.</p>
-            <div class="flex gap-6 mt-4 sm:mt-0">
-                <a href="#" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Service</a>
-                <a href="#" class="hover:text-white transition">Cookie Policy</a>
-            </div>
-        </div>
-    </div>
-</footer>
-
-{% endblock content %}
-
-</body>
-</html>
-
+    </section>
+</div>
+{% endblock %}
